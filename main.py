@@ -12,7 +12,7 @@ form = """
         <style>.error_message {{color: red}}</style>
     </title>
     <body>
-        <form action="/" method="POST"> <!--change to /welcome -->
+        <form action="/" method="POST">
             <h1>Signup</h1>
             <label for="username">Username</label>
                 <input type="text" name="username" value="{username}"/>
@@ -38,22 +38,13 @@ form = """
 
 @app.route("/")
 def index():
-    return form
+    return form.format(username="",email="",username_error="",password_error="",verify_password_error="",email_error="")
 
 def is_empty(string):    #to test if username/password/verify_password is empty
     if string == "":
         return True
     else:
         return False
-
-def valid_parameters(string):    #checks for spaces and length between 3 and 20 characters
-    for i in string:
-        if i == " ":
-            return "Cannot contain space characters"
-    if len(string) < 3 or len(string) > 20:    #checks that the length of the submission is between 3 and 20 characters
-        return "Must be between 3 and 20 characters"
-    else:
-        return True
 
 @app.route("/", methods=["POST"])
 def validate_submission():
