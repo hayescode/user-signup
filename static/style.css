@@ -1,0 +1,13 @@
+.error_message {
+    color: red
+}
+
+.text_box {
+    border: solid black 2px;
+    border-radius: 8px
+}
+
+#submit_button {
+    border: solid blue 2px;
+    border-radius: 7px
+}
