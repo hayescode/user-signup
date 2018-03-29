@@ -1,44 +1,12 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 import cgi
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-form = """
-<!doctype html>
-<html>
-    <head>
-    <title>User Signup</title>
-        <style>.error_message {{color: red}}</style>
-    </title>
-    <body>
-        <form action="/" method="POST">
-            <h1>Signup</h1>
-            <label for="username">Username</label>
-                <input type="text" name="username" value="{username}"/>
-                <span class="error_message">{username_error}</span>
-                <br>
-            <label for="password">Password</label>
-                <input type="password" name="password" />
-                <span class="error_message">{password_error}</span>
-                <br>
-            <label for="verify_password">Verify Password</label>
-                <input type="password" name="verify_password" />
-                <span class="error_message">{verify_password_error}</span>
-                <br>
-            <label for="email">Email (optional)</label>
-                <input type="text" name="email" value="{email}" />
-                <span class="error_message">{email_error}</span>
-                <br>
-            <input type="submit"/>
-        </form>
-    </body>
-</html>
-"""
-
 @app.route("/")
 def index():
-    return form.format(username="",email="",username_error="",password_error="",verify_password_error="",email_error="")
+    return render_template("form.html",username="",email="",username_error="",password_error="",verify_password_error="",email_error="")
 
 def is_empty(string):    #to test if username/password/verify_password is empty
     if string == "":
@@ -47,7 +15,7 @@ def is_empty(string):    #to test if username/password/verify_password is empty
         return False
 
 @app.route("/", methods=["POST"])
-def validate_submission():
+def validate_submission():    #throws errors is conditions are not met
     username = request.form["username"]
     password = request.form["password"]
     verify_password = request.form["verify_password"]
@@ -107,10 +75,10 @@ def validate_submission():
     if username_error == "" and password_error == "" and verify_password_error == "" and email_error == "":
         return redirect("/welcome?u={0}".format(username))
     else:
-        return form.format(username=username,email=email,username_error=username_error,password_error=password_error,verify_password_error=verify_password_error,email_error=email_error)
+        return render_template("form.html",username=username,email=email,username_error=username_error,password_error=password_error,verify_password_error=verify_password_error,email_error=email_error)
     
 @app.route('/welcome')
 def welcome():
     u = request.args.get('u')
-    return "<h1>Welcome, {0}</h1>".format(u)
+    return render_template("welcome.html", username=u)
 app.run()
